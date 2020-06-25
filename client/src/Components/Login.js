@@ -31,9 +31,16 @@ const Login = (props) => {
         isAuthenticated: true,
         alerts: [],
         token: res.data.token,
+        name: res.data.user.name,
       });
+
       props.handleChange({
-        alerts: [{ type: "success", text: "Login Succesfull!!" }],
+        alerts: [
+          {
+            type: "success",
+            text: "Login Succesfull!!",
+          },
+        ],
       });
       setTimeout(() => {
         props.handleChange({ alerts: [] });

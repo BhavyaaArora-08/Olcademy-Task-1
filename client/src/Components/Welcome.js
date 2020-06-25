@@ -41,13 +41,18 @@ const Welcome = (props) => {
   };
 
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <button className="btn btn-primary" type="submit">
+    <div style={{ textAlign: "center" }} className="containere">
+      <form
+        style={{ height: "300px" }}
+        className="form login"
+        onSubmit={onSubmit}
+      >
+        <h1>Welcome {props.name}!</h1>
+        <p>We are really happy to have you here</p>
+        <button className="btn btn-success" type="submit">
           Log Out
         </button>
       </form>
-      <h1>Welcome {props.name}!</h1>
     </div>
   );
 };
