@@ -5,7 +5,6 @@ import axios from "axios";
 const Welcome = (props) => {
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("hey", props.token, "   j");
 
     const config = {
       headers: {
@@ -17,6 +16,12 @@ const Welcome = (props) => {
     try {
       await axios.post("/api/users/logout", null, config);
       props.handleChange({ isAuthenticated: false, alerts: [], token: "" });
+      props.handleChange({
+        alerts: [{ type: "success", text: "You have logged out!" }],
+      });
+      setTimeout(() => {
+        props.handleChange({ alerts: [] });
+      }, 3000);
       return <Redirect to="/signup" />;
     } catch (err) {
       const errors = err.response.data.errors;
@@ -27,6 +32,9 @@ const Welcome = (props) => {
         });
       }
       props.handleChange({ alerts: errs });
+      setTimeout(() => {
+        props.handleChange({ alerts: [] });
+      }, 3000);
     }
 
     return false;

@@ -1,9 +1,28 @@
 import React from "react";
+import Alert from "@material-ui/lab/Alert";
+import { withStyles } from "@material-ui/core/styles";
 
-const Alert = (props) => {
+const styles = {
+  root: {
+    width: "400px",
+    margin: "5px auto",
+  },
+};
+
+const Alerte = (props) => {
   return (
-    <div>{props.alerts && props.alerts.map((alert) => <li>{alert}</li>)}</div>
+    <div className="alerts">
+      {props.alerts &&
+        props.alerts.map((alert) => (
+          <Alert
+            className={props.classes.root}
+            severity={alert.type ? alert.type : "error"}
+          >
+            {alert.text}
+          </Alert>
+        ))}
+    </div>
   );
 };
 
-export default Alert;
+export default withStyles(styles)(Alerte);

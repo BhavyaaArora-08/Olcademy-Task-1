@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, Redirect } from "react-router-dom";
 import axios from "axios";
 
@@ -27,22 +27,30 @@ const Login = (props) => {
     const body = JSON.stringify({ email, password, dob, gender });
     try {
       const res = await axios.post("/api/users/login", body, config);
-      console.log(res);
       props.handleChange({
         isAuthenticated: true,
         alerts: [],
         token: res.data.token,
       });
+      props.handleChange({
+        alerts: [{ type: "success", text: "Login Succesfull!!" }],
+      });
+      setTimeout(() => {
+        props.handleChange({ alerts: [] });
+      }, 3000);
       return <Redirect to="/" />;
     } catch (err) {
       const errors = err.response.data.errors;
       let errs = [];
       if (errors) {
         errors.forEach((error) => {
-          errs.unshift(error.msg);
+          errs.unshift({ type: "error", text: error.msg });
         });
       }
       props.handleChange({ alerts: errs });
+      setTimeout(() => {
+        props.handleChange({ alerts: [] });
+      }, 3000);
     }
 
     return false;

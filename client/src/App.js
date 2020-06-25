@@ -31,9 +31,9 @@ class App extends React.Component {
   }
 
   handleChange = (newStateUpdate) => {
-    console.log(this.state);
+    // console.log(this.state);
     this.setState({ ...newStateUpdate });
-    console.log(this.state);
+    // console.log(this.state);
   };
 
   render() {
