@@ -65,6 +65,7 @@ router.post(
       if (!errors.isEmpty()) {
         return res.status(400).send({ errors: errors.array() });
       }
+      console.log("hey");
 
       const user = await User.findByCredentials(
         req.body.email,
@@ -75,11 +76,12 @@ router.post(
           .status(404)
           .json({ errors: [{ msg: "User doesn't exist" }] });
       }
+      console.log("hey");
 
       const token = await user.generateAuthToken();
       res
         .status(200)
-        .json({ msg: "User logged in successfully!", user, token });
+        .send({ msg: "User logged in successfully!", user, token });
     } catch (e) {
       res
         .status(500)

@@ -1,32 +1,115 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, Redirect } from "react-router-dom";
+import axios from "axios";
 
-const Signup = () => {
+const Signup = (props) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    dob: Date.now(),
+    gender: "Female",
+  });
+
+  if (props.isAuthenticated) {
+    return <Redirect to="/" />;
+  }
+  const { name, email, password, dob, gender } = formData;
+
+  const onChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const body = JSON.stringify({ name, email, password, dob, gender });
+    try {
+      const res = await axios.post("/api/users", body, config);
+      props.handleChange({
+        isAuthenticated: true,
+        alerts: [],
+        name,
+        token: res.data.token,
+      });
+      return <Redirect to="/" />;
+    } catch (err) {
+      const errors = err.response.data.errors;
+      let errs = [];
+      if (errors) {
+        errors.forEach((error) => {
+          errs.unshift(error.msg);
+        });
+      }
+      props.handleChange({ alerts: errs });
+    }
+
+    return false;
+  };
+
   return (
     <div className="containere">
-      <form className="form">
+      <form onSubmit={onSubmit} className="form">
         <h1>Sign up</h1>
-        <label for="name">Name</label>
-        <input placeholder="Enter your name" type="text" name="name" />
-        <label for="email">Email Address</label>
-        <input placeholder="your@email.com" name="email" />
-        <label for="password">Password</label>
-        <input placeholder=" ************* " name="password" />
-        <label for="dob">Date of Birth</label>
-        <input type="date" name="dob" />
-        <label for="gender">Gender</label>
+        <label htmlFor="name">Name</label>
+        <input
+          onChange={onChange}
+          placeholder="Enter your name"
+          type="text"
+          name="name"
+          value={name}
+        />
+        <label htmlFor="email">Email Address</label>
+        <input
+          type="email"
+          value={email}
+          onChange={onChange}
+          placeholder="your@email.com"
+          name="email"
+        />
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          value={password}
+          onChange={onChange}
+          placeholder="*************"
+          name="password"
+        />
+        <label htmlFor="dob">Date of Birth</label>
+        <input value={dob} onChange={onChange} type="date" name="dob" />
+        <label htmlFor="gender">Gender</label>
         <div className="gender">
           <span className="g">
             <label>M</label>
-            <input type="radio" name="gender" />
+            <input
+              defaultChecked={true}
+              onChange={onChange}
+              value="Male"
+              type="radio"
+              name="gender"
+            />
           </span>
           <span className="g">
             <label>F</label>
-            <input type="radio" name="gender" />
+            <input
+              onChange={onChange}
+              value="Female"
+              type="radio"
+              name="gender"
+            />
           </span>
           <span className="g">
             <label>Other</label>
-            <input type="radio" name="gender" />
+            <input
+              onChange={onChange}
+              value="Other"
+              type="radio"
+              name="gender"
+            />
           </span>
         </div>
 
@@ -38,7 +121,7 @@ const Signup = () => {
         <div className="extra">
           <span>
             <span className="text">Already have an account?</span>
-            <NavLink to="/">Log in</NavLink>
+            <NavLink to="/login">Log in</NavLink>
           </span>
         </div>
       </form>
@@ -47,3 +130,5 @@ const Signup = () => {
 };
 
 export default Signup;
+
+// onClick={onSubmit}
